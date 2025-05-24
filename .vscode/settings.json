@@ -1,0 +1,3 @@
+{
+  "python.defaultInterpreterPath": "pybuild/venv/bin/python"
+}
