@@ -1,47 +1,32 @@
 # Quant_trading_system
 
-**Modular RL + Risk Control + C++ High-Frequency Trading System**
+An end-to-end modular quantitative trading system powered by:
+- 🧠 C++ core data processing with PyBind11
+- 🤖 Reinforcement Learning with PPO / DQN (Stable-Baselines3)
+- 📈 Custom trading environment based on gym.Env
+- 🧩 Modular structure: alpha_engine / execution_engine / risk_control / env
+- ✅ Integrated backtesting & real-time simulation pipeline
 
-This repository implements a modular, extensible trading system that combines:
-- ✅ Reinforcement Learning (e.g. PPO, DQN)
-- ✅ Rule-based baseline strategies
-- ✅ Risk control logic (drawdown limits, stop-loss)
-- ✅ High-frequency C++ inference using `libtorch`
-- ✅ Real-time execution via Python interfaces
+## Project Structure
+- `cpp_core/` — C++ module with PyBind11 bindings
+- `scripts/` — Training, evaluation, inference entry points
+- `env/` — RL training environment (`env_cxx.py`, coming soon)
+- `models/` — Trained agent files (DQN, PPO)
+- `execution_engine/` — Simulated portfolio + order execution
+- `risk_control/` — Placeholder for future stop-loss/vol control
 
----
+## Quick Start
 
-## 🧠 Project Objective
+```bash
+git clone https://github.com/kevinlmf/Quant_trading_system.git
+cd Quant_trading_system
 
-The goal is to build a production-ready research pipeline for RL-based trading systems that:
-- Learns and generates alpha through RL or rule-based logic
-- Controls downside risk via robust filters
-- Executes orders through real-time inference + broker API
-- Integrates cleanly with both Python (training/logic) and C++ (execution)
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 
----
+cd pybuild
+python setup.py build_ext --inplace
 
-## 📁 Folder Structure Overview
-
-| Path                   | Purpose                                                                 |
-|------------------------|-------------------------------------------------------------------------|
-| `alpha_engine/`        | Alpha generation: RL models (`ppo/`, `dqn/`) and `baseline/` strategies |
-| └── `inference/`       | Model export and TorchScript inference via `predict.py`                 |
-| `risk_control/`        | Risk modules (e.g., `stop_loss.py`, `drawdown_guard.py`)                |
-| `cpp_core/`            | C++ inference core (libtorch + pybind11 bindings)                        |
-| └── `bindings/`        | Python-C++ interface (`PYBIND11_MODULE`)                                |
-| └── `src/`, `include/` | Inference logic and headers                                              |
-| `execution_engine/`    | Real-time execution layer (e.g., `api/server.py`, broker adapters)       |
-| └── `app/`             | Web or monitor layer (optional)                                         |
-| `scripts/`             | CLI scripts: `train_rl.py`, `run_realtime.py`                           |
-| `env/`                 | Custom OpenAI Gym environments                                           |
-| `config/`              | YAML or JSON hyperparameter configs                                      |
-| `data/`                | Sample datasets / preprocessed data                                     |
-| `tests/`               | Unit and integration tests                                               |
-| `tensorboard_logs/`    | Training visualization logs                                              |
-| `.gitignore`           | Ignore cache, logs, `.env`, `.pyc`, and builds                          |
-| `Dockerfile`           | Container for portable training/inference                               |
-| `requirements.txt`     | Python dependencies                                                      |
-
----
+python scripts/train_ppo.py
 
