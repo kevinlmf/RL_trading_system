@@ -1,5 +1,3 @@
-// File: bindings/order_bindings.cpp
-
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include "order_executor.hpp"

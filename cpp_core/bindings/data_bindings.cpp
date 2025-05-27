@@ -4,7 +4,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(cpp_trading, m) {
+void bind_data_feed(py::module_& m) {
     py::class_<Row>(m, "Row")
         .def_readwrite("date", &Row::date)
         .def_readwrite("open", &Row::open)
