@@ -4,7 +4,7 @@ A full-featured modular quantitative trading system powered by:
 
 - 🤖 Reinforcement Learning with PPO / DQN (Stable-Baselines3)
 - 🧠 High-performance C++ data loader + execution module via PyBind11
-- 🧩 Custom OpenAI Gym-style trading environment
+- 🧹 Custom OpenAI Gym-style trading environment
 - 🖥️ Linux-friendly CLI automation for training & testing
 - 📊 Strategy comparison (DQN vs PPO vs Random baseline)
 - 🧪 Integrated test framework for C++ modules and Python models
@@ -13,6 +13,8 @@ A full-featured modular quantitative trading system powered by:
 ---
 
 ## 🚀 Quick Start
+
+> 📌 **Note:** If you already cloned this project before, please skip `git clone` and simply `cd Quant_trading_system`.
 
 ```bash
 # 1. Clone the repository
@@ -68,7 +70,7 @@ Quant_trading_system/
 ├── env/                                ← Gym-style trading environment
 │   ├── trading_env.py
 │   └── data_loader.py
-├── cpp_core/                           ← 🧩 C++ backend with PyBind11
+├── cpp_core/                           ← 🧹 C++ backend with PyBind11
 │   ├── include/                        ← C++ Header files (interfaces)
 │   │   ├── data_feed.h                 ← DataFeed for OHLCV
 │   │   └── order_executor.hpp          ← Mock order execution logic
@@ -141,4 +143,5 @@ scikit-learn>=1.2
 ## 📄 License
 
 MIT License © 2025 Mengfan Long
+
 
