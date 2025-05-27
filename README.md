@@ -5,16 +5,54 @@ A full-featured modular quantitative trading system powered by:
 - 🤖 Reinforcement Learning with PPO / DQN (Stable-Baselines3)
 - 🧠 High-performance C++ data loader + execution module via PyBind11
 - 🧩 Custom OpenAI Gym-style trading environment
-- 🖥️ Linux-friendly CLI automation for training & testing
+- 🖥️ Linux/macOS-friendly CLI automation for training & testing
 - 📊 Strategy comparison (DQN vs PPO vs Random baseline)
 - 🧪 Integrated test framework for C++ modules and Python models
 - 📦 TensorBoard logging support for live training monitoring
 
 ---
 
-## 📁 Project Structure
+## 🚀 Quick Start
 
-```text
+Clone the project and set up your environment in **4 simple steps**:
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/your_username/Quant_trading_system.git
+cd Quant_trading_system
+
+# 2. Create and activate a Python virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# 3. Install all required dependencies
+pip install -r requirements.txt
+
+# 4. Build the C++ PyBind11 backend module
+mkdir -p cpp_core/build && cd cpp_core/build
+cmake ..
+make -j4
+cd ../..
+
+Once setup is done, test the system:
+# Run C++ backend sanity check
+python scripts/test_cpp_module.py
+
+# Run random baseline strategy
+python scripts/test_random.py
+
+Train a reinforcement learning agent:
+# Train PPO agent
+python train_ppo.py
+
+# Train DQN agent
+python train_dqn.py
+
+# Visualize and compare strategies
+python scripts/compare_strategies.py
+
+
+📁 Project Structure
 Quant_trading_system/
 ├── train_dqn.py / train_ppo.py         ← RL training entrypoints
 ├── scripts/                            ← CLI tools
@@ -59,10 +97,7 @@ Quant_trading_system/
 
 ✅ C++ module test runner
 
-✅ TensorBoard log support
-
-🐧 Fully compatible with Linux, WSL2, and macOS
-
+✅ TensorBoard logging support
 
 🛠️ Future Work
 📈 Add portfolio metrics (Sharpe Ratio, Win Rate, Max Drawdown)
@@ -74,4 +109,28 @@ Quant_trading_system/
 📁 Export full trade logs as CSV
 
 🔍 Hyperparameter tuning via Optuna
+
+
+🧪 Requirements
+See requirements.txt, which includes:
+# RL & environment
+stable-baselines3==1.8.0
+gymnasium==0.29.1
+
+# Classic scientific stack
+numpy>=1.23
+pandas>=1.5
+matplotlib>=3.6
+
+# C++ module (PyBind11)
+pybind11>=2.11
+
+# Logging
+tensorboard>=2.10
+
+# Optional
+scikit-learn>=1.2
+
+📄 License
+MIT License © 2025 Mengfan Long
 
