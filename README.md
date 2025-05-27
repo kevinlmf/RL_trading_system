@@ -37,30 +37,24 @@ Quant_trading_system/
 
 
 
-✅ Features Completed
- DQN / PPO RL agents
+---
 
- Bash CLI training launcher
+## ✅ Features Completed
 
- Monitor + TensorBoard logs
+- ✅ DQN / PPO RL agents
+- 🖥️ Bash CLI training launcher
+- 📉 Monitor + TensorBoard logs
+- 🧱 C++ module loading test (`test_cpp_module.py`)
+- 📊 Strategy evaluation & visualization
+- 🎲 Random baseline test runner
+- 🐧 Linux-based terminal operation
 
- C++ module loading test (test_cpp_module.py)
+---
 
- Strategy evaluation & visualization
+## 🛠️ Future Work
 
- Random baseline test runner
-
- Linux-based terminal operation
-
-🔭 Future Work
- Add portfolio metrics (Sharpe Ratio, Win Rate, Max Drawdown)
-
- Integrate order execution module in C++
-
- Add alpha_engine & risk_control modules
-
- Implement CSV output for full trading logs
-
- Hyperparameter tuning via Optuna
-
-
+- 📈 Add portfolio metrics (Sharpe Ratio, Win Rate, Max Drawdown)
+- ⚙️ Integrate order execution module in C++
+- 🧠 Add `alpha_engine` & `risk_control` modules
+- 📁 Implement CSV output for full trading logs
+- 🔍 Hyperparameter tuning via Optuna
