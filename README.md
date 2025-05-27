@@ -14,24 +14,27 @@ A full-featured modular quantitative trading system powered by:
 
 ## 📁 Project Structure
 
+```
 Quant_trading_system/
-├── train_dqn.py / train_ppo.py ← DQN/PPO training scripts
-├── scripts/ ← CLI scripts
-│ ├── run_training.sh ← One-command bash training interface
-│ ├── test_model.py ← Load and evaluate trained models
-│ ├── compare_strategies.py ← Run & plot DQN vs PPO vs Random
-│ └── test_random.py ← Run random baseline on environment
-├── env/ ← Trading environment + data loader
-│ ├── trading_env.py
-│ └── data_loader.py
-├── cpp_core/ ← C++ module with PyBind11 binding
-│ ├── src/
-│ ├── bindings/
-│ └── build/ ← Compiled .so lives here
-├── models/ ← Saved PPO / DQN models
-├── tensorboard/ ← TensorBoard logs
-├── data/ ← Input OHLCV CSV (e.g., SPY_1d.csv)
+├── train_dqn.py / train_ppo.py         ← DQN/PPO training scripts
+├── scripts/                            ← CLI scripts
+│   ├── run_training.sh                 ← One-command bash training interface
+│   ├── test_model.py                   ← Load and evaluate trained models
+│   ├── compare_strategies.py           ← Run & plot DQN vs PPO vs Random
+│   └── test_random.py                  ← Run random baseline on environment
+├── env/                                ← Trading environment + data loader
+│   ├── trading_env.py
+│   └── data_loader.py
+├── cpp_core/                           ← C++ module with PyBind11 binding
+│   ├── src/
+│   ├── bindings/
+│   └── build/                          ← Compiled `.so` lives here
+├── models/                             ← Saved PPO / DQN models
+├── tensorboard/                        ← TensorBoard logs
+├── data/                               ← Input OHLCV CSV (e.g., SPY_1d.csv)
 └── README.md
+```
+
 
 
 ✅ Features Completed
