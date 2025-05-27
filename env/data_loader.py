@@ -10,10 +10,11 @@ def load_csv_data(path):
     # ✅ 丢弃 Date 列，只保留 OHLCV 数值
     df = df[['Open', 'High', 'Low', 'Close', 'Volume']]
 
-    # ✅ 转换为 float 类型（防止是字符串）
+    # ✅ 转换为 float 类型
     df = df.astype(float)
 
-    return df.values
+    return df  # ✅ 保留为 DataFrame
+
 
 
 

@@ -3,6 +3,12 @@ import sys
 import gymnasium as gym
 from stable_baselines3 import DQN
 from stable_baselines3.common.monitor import Monitor
+from env.trading_env import TradingEnv
+from env.data_loader import load_csv_data
+
+df = load_csv_data("data/SPY_1d.csv")
+env = TradingEnv(data=df, window_size=10)
+
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from env.trading_env import TradingEnv
