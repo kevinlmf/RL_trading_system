@@ -1,32 +1,63 @@
-# Quant_trading_system
+# Quant_trading_system 🧠📈
 
-An end-to-end modular quantitative trading system powered by:
-- 🧠 C++ core data processing with PyBind11
+A full-featured modular quantitative trading system powered by:
+
+- 🧠 High-performance C++ data loader via PyBind11
 - 🤖 Reinforcement Learning with PPO / DQN (Stable-Baselines3)
-- 📈 Custom trading environment based on gym.Env
-- 🧩 Modular structure: alpha_engine / execution_engine / risk_control / env
-- ✅ Integrated backtesting & real-time simulation pipeline
+- 🧩 Custom OpenAI Gym-style trading environment
+- 🖥️ Linux-compatible terminal CLI automation (`run_training.sh`)
+- 📊 Strategy comparison plots (DQN vs PPO vs Random)
+- 🧪 Integrated test framework for random baseline and trained models
+- 📦 TensorBoard logging support for training monitoring
 
-## Project Structure
-- `cpp_core/` — C++ module with PyBind11 bindings
-- `scripts/` — Training, evaluation, inference entry points
-- `env/` — RL training environment (`env_cxx.py`, coming soon)
-- `models/` — Trained agent files (DQN, PPO)
-- `execution_engine/` — Simulated portfolio + order execution
-- `risk_control/` — Placeholder for future stop-loss/vol control
+---
 
-## Quick Start
+## 📁 Project Structure
 
-```bash
-git clone https://github.com/kevinlmf/Quant_trading_system.git
-cd Quant_trading_system
+Quant_trading_system/
+├── train_dqn.py / train_ppo.py ← DQN/PPO training scripts
+├── scripts/ ← CLI scripts
+│ ├── run_training.sh ← One-command bash training interface
+│ ├── test_model.py ← Load and evaluate trained models
+│ ├── compare_strategies.py ← Run & plot DQN vs PPO vs Random
+│ └── test_random.py ← Run random baseline on environment
+├── env/ ← Trading environment + data loader
+│ ├── trading_env.py
+│ └── data_loader.py
+├── cpp_core/ ← C++ module with PyBind11 binding
+│ ├── src/
+│ ├── bindings/
+│ └── build/ ← Compiled .so lives here
+├── models/ ← Saved PPO / DQN models
+├── tensorboard/ ← TensorBoard logs
+├── data/ ← Input OHLCV CSV (e.g., SPY_1d.csv)
+└── README.md
 
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
 
-cd pybuild
-python setup.py build_ext --inplace
+✅ Features Completed
+ DQN / PPO RL agents
 
-python scripts/train_ppo.py
+ Bash CLI training launcher
+
+ Monitor + TensorBoard logs
+
+ C++ module loading test (test_cpp_module.py)
+
+ Strategy evaluation & visualization
+
+ Random baseline test runner
+
+ Linux-based terminal operation
+
+🔭 Future Work
+ Add portfolio metrics (Sharpe Ratio, Win Rate, Max Drawdown)
+
+ Integrate order execution module in C++
+
+ Add alpha_engine & risk_control modules
+
+ Implement CSV output for full trading logs
+
+ Hyperparameter tuning via Optuna
+
 
