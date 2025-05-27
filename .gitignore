@@ -1,7 +1,6 @@
+venv/
 __pycache__/
-*.pyc
-*.pt
-build/
 *.so
-.DS_Store
-.env
+cpp_core/build/
+tensorboard/
+models/
