@@ -4,7 +4,7 @@ A full-featured modular quantitative trading system powered by:
 
 - 🤖 Reinforcement Learning with PPO / DQN (Stable-Baselines3)
 - 🧠 High-performance C++ data loader + execution module via PyBind11
-- 🧹 Custom OpenAI Gym-style trading environment
+- 🌿 Custom OpenAI Gym-style trading environment
 - 🖥️ Linux-friendly CLI automation for training & testing
 - 📊 Strategy comparison (DQN vs PPO vs Random baseline)
 - 🧪 Integrated test framework for C++ modules and Python models
@@ -12,36 +12,48 @@ A full-featured modular quantitative trading system powered by:
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start (One Command Setup)
 
-> 📌 **Note:** If you already cloned this project before, please skip `git clone` and simply `cd Quant_trading_system`.
+Clone this repo and run the setup script to get started:
 
 ```bash
-# 1. Clone the repository
 git clone https://github.com/kevinlmf/Quant_trading_system.git
 cd Quant_trading_system
+bash scripts/set_up.sh
+```
 
-# 2. Create and activate a Python virtual environment
+This script will:
+
+- 🔧 Create and activate a Python virtual environment
+- 📦 Install all required Python dependencies
+- ⚙️ Build the C++ module with PyBind11
+- ✅ Run a test to ensure `cpp_trading.so` loads properly
+
+---
+
+## ✅ Manual Installation (Advanced)
+
+```bash
+# 1. Create and activate Python virtual environment
 python3 -m venv venv
 source venv/bin/activate
 
-# 3. Install all required dependencies
+# 2. Install required dependencies
 pip install -r requirements.txt
 
-# 4. Build the C++ PyBind11 backend module
-chmod +x build_cpp.sh
-./build_cpp.sh
+# 3. Build the C++ backend module
+bash scripts/build_cpp_module.sh
+
+# 4. Run test to verify module works
+python scripts/test_cpp_module.py
 ```
 
 ---
 
-## ✅ Run the System
+## 🧠 How to Use
 
 ```bash
-# Run C++ backend sanity check
-python scripts/test_cpp_module.py
-
-# Run random baseline strategy
+# Run the random baseline
 python scripts/test_random.py
 
 # Train PPO agent
@@ -50,7 +62,7 @@ python train_ppo.py
 # Train DQN agent
 python train_dqn.py
 
-# Visualize and compare strategies
+# Compare strategies
 python scripts/compare_strategies.py
 ```
 
@@ -58,7 +70,7 @@ python scripts/compare_strategies.py
 
 ## 📁 Project Structure
 
-```text
+```
 Quant_trading_system/
 ├── train_dqn.py / train_ppo.py         ← RL training entrypoints
 ├── scripts/                            ← CLI tools
@@ -66,77 +78,61 @@ Quant_trading_system/
 │   ├── compare_strategies.py           ← Visualize DQN / PPO / Random
 │   ├── test_model.py                   ← Evaluate saved models
 │   ├── test_random.py                  ← Run random baseline
-│   └── test_cpp_module.py              ← Sanity test for cpp_trading.so
-├── env/                                ← Gym-style trading environment
+│   ├── test_cpp_module.py              ← Sanity test for cpp_trading.so
+│   └── set_up.sh                       ← 🧠 One-shot full setup script
+├── env/                                ← Custom Gym environment
 │   ├── trading_env.py
 │   └── data_loader.py
-├── cpp_core/                           ← 🧹 C++ backend with PyBind11
-│   ├── include/                        ← C++ Header files (interfaces)
-│   │   ├── data_feed.h                 ← DataFeed for OHLCV
-│   │   └── order_executor.hpp          ← Mock order execution logic
+├── cpp_core/                           ← C++ backend
+│   ├── include/                        ← C++ headers
+│   │   ├── data_feed.h
+│   │   └── order_executor.hpp
 │   ├── src/                            ← C++ implementations
 │   │   ├── data_feed.cpp
 │   │   └── order_executor.cpp
-│   ├── bindings/                       ← Python-C++ interface via PyBind11
+│   ├── bindings/                       ← PyBind11 Python interface
 │   │   ├── data_bindings.cpp
 │   │   ├── order_bindings.cpp
-│   │   └── main_bindings.cpp           ← PYBIND11_MODULE entry
-│   ├── build/                          ← Output directory for `cpp_trading.so`
-│   └── CMakeLists.txt                  ← Build instructions using pybind11_add_module
-├── models/                             ← Saved RL agent models (PPO / DQN)
-├── tensorboard/                        ← Training logs for visualization
-├── data/                               ← OHLCV data files (e.g., `SPY_1d.csv`)
+│   │   └── main_bindings.cpp
+│   ├── build/                          ← Output: cpp_trading.so
+│   └── CMakeLists.txt                  ← Build config
+├── models/                             ← Trained RL agents
+├── data/                               ← Historical OHLCV data
+├── tensorboard/                        ← Training logs
 └── README.md                           ← You're here!
 ```
 
 ---
 
-## ✅ Features Completed
+## 📦 Requirements
 
-- ✅ PPO / DQN reinforcement learning agents  
-- ✅ Random baseline strategy  
-- ✅ Modular training environment using `gym.Env`  
-- ✅ C++ module integration with PyBind11 (data feed + order execution)  
-- ✅ One-line bash training launcher (`run_training.sh`)  
-- ✅ Strategy comparison plotting (`matplotlib` + evaluation CSV)  
-- ✅ C++ module test runner  
-- ✅ TensorBoard logging support
+Listed in `requirements.txt`, including:
+
+- `stable-baselines3==1.8.0`
+- `gymnasium==0.29.1`
+- `pybind11>=2.11`
+- `numpy`, `pandas`, `matplotlib`, `tensorboard`, `scikit-learn`
 
 ---
 
-## 🛠️ Future Work
+## 🛠️ Features
 
-- 📈 Add portfolio metrics (Sharpe Ratio, Win Rate, Max Drawdown)
-- ⚙️ Integrate real-time order execution module in C++
-- 🧠 Add `alpha_engine` and `risk_control` strategy modules
-- 📁 Export full trade logs as CSV
-- 🔍 Hyperparameter tuning via Optuna
+- ✅ PPO / DQN reinforcement learning agents
+- ✅ Modular training using custom `gym.Env`
+- ✅ C++ backend with PyBind11 integration
+- ✅ One-line setup and training script
+- ✅ Strategy comparison plots
+- ✅ TensorBoard integration
 
 ---
 
-## 🧪 Requirements
+## 🔮 Future Work
 
-See `requirements.txt`, which includes:
-
-```text
-# RL & environment
-stable-baselines3==1.8.0
-gymnasium==0.29.1
-
-# Classic scientific stack
-numpy>=1.23
-pandas>=1.5
-matplotlib>=3.6
-
-# C++ module (PyBind11)
-pybind11>=2.11
-
-# Logging
-tensorboard>=2.10
-
-# Optional
-scikit-learn>=1.2
-```
+- 📈 Add portfolio metrics (Sharpe, WinRate, Drawdown)
+- 🧩 Integrate real-time execution engine
+- 🧠 Add alpha signal & risk control modules
+- 📁 Export trade logs as CSV
+- 🎯 Hyperparameter tuning (Optuna)
 
 ---
 
@@ -144,4 +140,6 @@ scikit-learn>=1.2
 
 MIT License © 2025 Mengfan Long
 
+---
 
+## ⭐ Star this repo if you like it!
