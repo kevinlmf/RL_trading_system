@@ -29,6 +29,12 @@ This script will:
 - ⚙️ Build the C++ module with PyBind11
 - ✅ Run a test to ensure `cpp_trading.so` loads properly
 
+⚠️ Note: This script uses python3.10 by default.
+If you don’t have it installed, you may:
+
+Replace python3.10 with python3 in scripts/set_up.sh, or
+
+Install Python 3.10 via pyenv.
 ---
 
 ## ✅ Manual Installation (Advanced)
