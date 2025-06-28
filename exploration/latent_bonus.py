@@ -18,14 +18,26 @@ class LatentFactorBonus:
 
     def fit_latent_space(self):
         X = np.array(self.memory)
+
+        # Automatically flatten if input is 3D (e.g., time-series: [N, T, D])
+        if X.ndim == 3:
+            N, T, D = X.shape
+            X = X.reshape(N * T, D)
+
         Z = self.pca.fit_transform(X)
         self.kde = KernelDensity(kernel='gaussian', bandwidth=self.bandwidth)
         self.kde.fit(Z)
 
     def compute_bonus(self, obs):
-        if len(self.memory) < 50:
+        if len(self.memory) < 50 or self.kde is None:
             return 0.0
-        z = self.pca.transform(obs.reshape(1, -1))
+
+        obs_flat = obs
+        if obs.ndim == 2:  # e.g., T x D
+            obs_flat = obs.reshape(-1)
+
+        z = self.pca.transform(obs_flat.reshape(1, -1))
         log_density = self.kde.score_samples(z)
         bonus = -self.beta * log_density[0]
         return bonus
+
