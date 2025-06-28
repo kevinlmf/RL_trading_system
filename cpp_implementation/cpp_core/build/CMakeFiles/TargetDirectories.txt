@@ -1,0 +1,3 @@
+/Users/mengfanlong/Downloads/Quant_trading_system/cpp_core/build/CMakeFiles/cpp_trading.dir
+/Users/mengfanlong/Downloads/Quant_trading_system/cpp_core/build/CMakeFiles/edit_cache.dir
+/Users/mengfanlong/Downloads/Quant_trading_system/cpp_core/build/CMakeFiles/rebuild_cache.dir

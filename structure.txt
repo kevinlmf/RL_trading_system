@@ -1,0 +1,101 @@
+.
+├── 0_scripts
+│   ├── README.md
+│   ├── download_data.py
+│   ├── linux
+│   │   ├── build_cpp_module.sh
+│   │   └── setup_env.sh
+│   ├── run_realtime.py
+│   ├── run_training.py
+│   └── test_order_executor.py
+├── 1_cpp_implementation
+│   ├── README.md
+│   ├── cpp_core
+│   │   ├── CMakeLists.txt
+│   │   ├── bindings
+│   │   ├── build
+│   │   ├── build_cpp.sh
+│   │   ├── include
+│   │   ├── pybind11
+│   │   └── src
+│   ├── execution_engine
+│   │   ├── api
+│   │   └── app
+│   ├── pybuild
+│   │   ├── bindings
+│   │   ├── include
+│   │   ├── setup.py
+│   │   └── src
+│   ├── scripts
+│   └── utils
+├── 2_theory
+│   ├── README.md
+│   ├── copula_theory.md
+│   ├── math_finance_theory.md
+│   └── rl_foundation.md
+├── 3_data
+│   ├── README.md
+│   ├── real
+│   │   └── raw
+│   └── simulation
+│       └── processed
+├── 4_learning
+│   ├── 1_env
+│   │   ├── env_config.py
+│   │   └── trading_env.py
+│   ├── 2_pricing
+│   │   ├── black_scholes.py
+│   │   ├── copula_model.py
+│   │   └── simulator.py
+│   ├── 3_strategy
+│   │   ├── lstm
+│   │   └── rl
+│   └── 4_optimization
+│       └── grid_search.py
+├── 5_evaluation
+│   ├── Computation
+│   │   └── compute_performance_metrics.py
+│   ├── Financial
+│   │   ├── compare_strategies.py
+│   │   ├── draw_reward_curves.py
+│   │   └── plot_strategy_vs_baseline.py
+│   ├── Period
+│   │   └── backtest_utils.py
+│   └── README.md
+├── Dockerfile
+├── README.md
+├── requirements.txt
+├── structure.txt
+└── venv
+    ├── bin
+    │   ├── Activate.ps1
+    │   ├── activate
+    │   ├── activate.csh
+    │   ├── activate.fish
+    │   ├── f2py
+    │   ├── fonttools
+    │   ├── isympy
+    │   ├── markdown_py
+    │   ├── numpy-config
+    │   ├── pip
+    │   ├── pip3
+    │   ├── pip3.10
+    │   ├── pybind11-config
+    │   ├── pyftmerge
+    │   ├── pyftsubset
+    │   ├── python -> python3.10
+    │   ├── python3 -> python3.10
+    │   ├── python3.10 -> /Users/mengfanlong/.pyenv/versions/3.10.13/bin/python3.10
+    │   ├── tensorboard
+    │   ├── torchfrtrace
+    │   ├── torchrun
+    │   ├── tqdm
+    │   └── ttx
+    ├── include
+    ├── lib
+    │   └── python3.10
+    ├── pyvenv.cfg
+    └── share
+        └── man
+
+43 directories, 56 files
