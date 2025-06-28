@@ -6,7 +6,8 @@ import pandas as pd
 import torch
 from learning.env.trading_env import TradingEnv
 from learning.strategy.rl.ppo.ppo_agent import PPOAgent
-from learning.exploration.latent_bonus import LatentFactorBonus
+from exploration.latent_bonus import LatentFactorBonus
+
 
 # === Config ===
 DATA_PATH = "data/low_dimension/simulated_copula_data.csv"
