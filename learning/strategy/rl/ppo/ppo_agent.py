@@ -1,70 +1,71 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from learning.strategy.rl.ppo.ppo_network import PPOActorCritic
 import numpy as np
 
+class ActorCritic(nn.Module):
+    def __init__(self, obs_shape, n_actions):
+        super().__init__()
+        self.shared = nn.Sequential(
+            nn.Flatten(),
+            nn.Linear(np.prod(obs_shape), 64),
+            nn.ReLU()
+        )
+        self.actor = nn.Linear(64, n_actions)
+        self.critic = nn.Linear(64, 1)
+
+    def forward(self, x):
+        x = self.shared(x)
+        return self.actor(x), self.critic(x)
 
 class PPOAgent:
-    def __init__(self, obs_shape, action_dim, gamma=0.99, lam=0.95, lr=3e-4, clip_eps=0.2):
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.gamma = gamma
-        self.lam = lam
-        self.clip_eps = clip_eps
-        input_dim = obs_shape[0] * obs_shape[1]
-        self.model = PPOActorCritic(input_dim, action_dim).to(self.device)
+    def __init__(self, obs_shape, n_actions, clip_eps=0.2, gamma=0.99, lr=3e-4):
+        self.model = ActorCritic(obs_shape, n_actions)
         self.optimizer = optim.Adam(self.model.parameters(), lr=lr)
-
-    def act(self, obs):
-        obs_tensor = torch.tensor(obs.flatten(), dtype=torch.float32).unsqueeze(0).to(self.device)
-        with torch.no_grad():
-            logits, value = self.model(obs_tensor)
-        dist = torch.distributions.Categorical(logits=logits)
-        action = dist.sample()
-        log_prob = dist.log_prob(action)
-        return action.item(), log_prob.item(), value.item()
+        self.clip_eps = clip_eps
+        self.gamma = gamma
+        self.n_actions = n_actions
 
     def select_action(self, obs):
-        return self.act(obs)  # ✅ 用于统一接口（和 DQN 接轨）
+        obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0)
+        logits, value = self.model(obs_tensor)
+        probs = torch.softmax(logits, dim=-1)
+        dist = torch.distributions.Categorical(probs)
+        action = dist.sample()
+        return action.item(), dist.log_prob(action), value.squeeze()
 
-    def compute_gae(self, rewards, values, dones, next_value):
-        advantages = []
-        gae = 0
-        values = values + [next_value]
-        for t in reversed(range(len(rewards))):
-            delta = rewards[t] + self.gamma * values[t + 1] * (1 - dones[t]) - values[t]
-            gae = delta + self.gamma * self.lam * (1 - dones[t]) * gae
-            advantages.insert(0, gae)
-        return advantages
+    def learn(self, trajectory):
+        obs_list, action_list, logprob_list, reward_list, value_list = zip(*trajectory)
 
-    def update(self, batch):
-        obs = torch.tensor([x.flatten() for x in batch["obs"]], dtype=torch.float32).to(self.device)
-        actions = torch.tensor(batch["actions"], dtype=torch.int64).to(self.device)
-        old_log_probs = torch.tensor(batch["log_probs"], dtype=torch.float32).to(self.device)
-        returns = torch.tensor(batch["returns"], dtype=torch.float32).to(self.device)
-        advantages = torch.tensor(batch["advantages"], dtype=torch.float32).to(self.device)
+        # Compute returns and advantages
+        returns, advantages = [], []
+        G = 0
+        for t in reversed(range(len(reward_list))):
+            G = reward_list[t] + self.gamma * G
+            returns.insert(0, G)
+        returns = torch.tensor(returns, dtype=torch.float32)
+        values = torch.tensor(value_list, dtype=torch.float32)
+        advantages = returns - values.detach()
 
-        logits, values = self.model(obs)
-        dist = torch.distributions.Categorical(logits=logits)
-        new_log_probs = dist.log_prob(actions)
-        entropy = dist.entropy().mean()
+        # Convert to tensor
+        obs_batch = torch.tensor(np.array(obs_list), dtype=torch.float32)
+        action_batch = torch.tensor(action_list)
+        old_log_probs = torch.stack(logprob_list)
 
-        # PPO Clipped Loss
-        ratio = torch.exp(new_log_probs - old_log_probs)
-        surr1 = ratio * advantages
-        surr2 = torch.clamp(ratio, 1 - self.clip_eps, 1 + self.clip_eps) * advantages
-        policy_loss = -torch.min(surr1, surr2).mean()
-        value_loss = nn.functional.mse_loss(values.squeeze(), returns)
-        loss = policy_loss + 0.5 * value_loss - 0.01 * entropy
+        logits, value_preds = self.model(obs_batch)
+        dist = torch.distributions.Categorical(logits.softmax(dim=-1))
+        new_log_probs = dist.log_prob(action_batch)
+
+        ratio = (new_log_probs - old_log_probs).exp()
+        surrogate1 = ratio * advantages
+        surrogate2 = torch.clamp(ratio, 1 - self.clip_eps, 1 + self.clip_eps) * advantages
+        actor_loss = -torch.min(surrogate1, surrogate2).mean()
+        critic_loss = (returns - value_preds.squeeze()).pow(2).mean()
+
+        loss = actor_loss + 0.5 * critic_loss
 
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
-
-        return {
-            "policy_loss": policy_loss.item(),
-            "value_loss": value_loss.item(),
-            "entropy": entropy.item()
-        }
 
 
