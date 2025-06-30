@@ -1,49 +1,48 @@
 import torch
-import pandas as pd
 from learning.env.trading_env import TradingEnv
-from learning.strategy.rl.dqn.dqn_agent import DQNAgent
+from learning.strategy.dqn.dqn_agent import DQNAgent
+from learning.strategy.dqn.dqn_network import QNetwork
 
-# === Load data ===
-df = pd.read_csv("data/low_dimension/simulated_copula_data.csv")
-env = TradingEnv(df, window_size=10)
 
-# === Init agent ===
-obs_shape = env.observation_space.shape
-n_actions = env.action_space.n
-agent = DQNAgent(obs_shape, n_actions)
 
-# === Training ===
-n_episodes = 50
+EPISODES = 50
+WINDOW_SIZE = 30
+INITIAL_CASH = 1e6
+BATCH_SIZE = 64
+UPDATE_TARGET_EVERY = 10
 
-for episode in range(n_episodes):
-    obs, _ = env.reset()
+env = TradingEnv(data_source="simulated", window_size=WINDOW_SIZE, initial_cash=INITIAL_CASH)
+state_dim = env.observation_space.shape[0]
+action_dim = env.action_space.shape[0]
+
+q_network = QNetwork(state_dim, action_dim)
+agent = DQNAgent(q_network=q_network,
+                 state_dim=state_dim,
+                 action_dim=action_dim,
+                 batch_size=BATCH_SIZE)
+
+for ep in range(EPISODES):
+    state = env.reset()
     done = False
     total_reward = 0
-
+    
     while not done:
-        action = agent.select_action(obs)
-        next_obs, reward, terminated, truncated, info = env.step(action)
-        done = terminated or truncated
+        action_idx = agent.select_action(state)
+        action = torch.nn.functional.one_hot(torch.tensor(action_idx), num_classes=action_dim).numpy()
+        next_state, reward, done, info = env.step(action)
 
-        agent.remember(obs, action, reward, next_obs, done)
-        agent.learn()
+        agent.store_transition(state, action_idx, reward, next_state, done)
+        agent.train_step()
 
-        obs = next_obs
+        state = next_state
         total_reward += reward
 
-    agent.update_target()
-    print(f"📘 Episode {episode + 1} | Total Reward: {total_reward:.2f}")
+    if ep % UPDATE_TARGET_EVERY == 0:
+        agent.update_target_network()
 
-# === Save model ===
-import os
-os.makedirs("models", exist_ok=True)
-torch.save(agent.model.state_dict(), "models/dqn_model.pt")
-print("📦 DQN model saved to: models/dqn_model.pt")
+    print(f"Episode {ep+1}/{EPISODES} | Total Reward: {total_reward:.2f}")
 
-
-
-
-
+torch.save(q_network.state_dict(), "models/dqn_q_network.pt")
 
 
 

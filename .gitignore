@@ -4,3 +4,13 @@ __pycache__/
 cpp_core/build/
 tensorboard/
 models/
+venv/
+__pycache__/
+*.pyc
+*.pt
+.DS_Store
+venv/
+__pycache__/
+*.pyc
+*.pt
+.DS_Store

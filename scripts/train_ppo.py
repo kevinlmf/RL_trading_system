@@ -1,42 +1,56 @@
 import torch
-import pandas as pd
 from learning.env.trading_env import TradingEnv
-from learning.strategy.rl.ppo.ppo_agent import PPOAgent
+from learning.strategy.ppo.ppo_agent import PPOAgent
+from learning.strategy.ppo.ppo_network import ActorCritic
 
-# === Load data ===
-df = pd.read_csv("data/low_dimension/simulated_copula_data.csv")
-env = TradingEnv(df, window_size=10)
+# === Hyperparameters ===
+EPISODES = 50
+WINDOW_SIZE = 30
+INITIAL_CASH = 1e6
+BATCH_SIZE = 64
+DEVICE = "cpu"  # 如果使用 GPU 可以改为 "cuda"
 
-# === Init agent ===
-obs_shape = env.observation_space.shape
-n_actions = env.action_space.n
-agent = PPOAgent(obs_shape, n_actions)
+# === Initialize Environment ===
+env = TradingEnv(data_source="simulated", window_size=WINDOW_SIZE, initial_cash=INITIAL_CASH)
+state_dim = env.observation_space.shape[0]
+action_dim = env.action_space.shape[0]
 
-# === Training ===
-n_episodes = 50
+# === Initialize PPO Agent ===
+model = ActorCritic(state_dim, action_dim).to(DEVICE)
+agent = PPOAgent(actor_critic=model, batch_size=BATCH_SIZE, device=DEVICE)
 
-for episode in range(n_episodes):
-    obs, _ = env.reset()
+# === Training Loop ===
+for ep in range(EPISODES):
+    state = env.reset()
     done = False
     total_reward = 0
-    trajectory = []
 
     while not done:
-        action, log_prob, value = agent.select_action(obs)
-        next_obs, reward, terminated, truncated, info = env.step(action)
-        done = terminated or truncated
+        action_idx, log_prob = agent.select_action(state)
+        action = torch.nn.functional.one_hot(torch.tensor(action_idx), num_classes=action_dim).numpy()
+        next_state, reward, done, info = env.step(action)
 
-        trajectory.append((obs, action, log_prob, reward, value))
-        obs = next_obs
+        with torch.no_grad():
+            _, value = model(torch.tensor(state, dtype=torch.float32).to(DEVICE))
+
+        agent.store_transition((state, action_idx, reward, done, log_prob, value.item()))
+
+        state = next_state
         total_reward += reward
 
-    agent.learn(trajectory)
-    print(f"📘 Episode {episode + 1} | Total Reward: {total_reward:.2f}")
+    agent.train_step()
+    print(f"Episode {ep+1}/{EPISODES} | Total Reward: {total_reward:.2f}")
 
-# === Save model ===
-import os
-os.makedirs("models", exist_ok=True)
-torch.save(agent.model.state_dict(), "models/ppo_actor_critic.pt")
-print("📦 PPO model saved to: models/ppo_actor_critic.pt")
+# === Save Trained Model ===
+torch.save(model.state_dict(), "models/ppo_actor_critic.pt")
+
+
+
+
+
+
+
+
+
 
 

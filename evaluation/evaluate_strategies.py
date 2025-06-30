@@ -1,94 +1,72 @@
-import pandas as pd
 import numpy as np
 import torch
+import pandas as pd
+import matplotlib.pyplot as plt
 from learning.env.trading_env import TradingEnv
-from learning.strategy.rl.dqn.dqn_agent import DQNAgent
-from learning.strategy.rl.ppo.ppo_agent import PPOAgent
-
-# === Load data ===
-df = pd.read_csv("data/low_dimension/simulated_copula_data.csv")
-env = TradingEnv(df, window_size=10)
-obs_shape = env.observation_space.shape
-n_actions = env.action_space.n
-
-# === Load models ===
-DQN_MODEL_PATH = "models/dqn_model.pt"
-PPO_MODEL_PATH = "models/ppo_actor_critic.pt"
-
-agent_dqn = DQNAgent(obs_shape, n_actions)
-agent_dqn.model.load_state_dict(torch.load(DQN_MODEL_PATH))
-
-agent_ppo = PPOAgent(obs_shape, n_actions)
-agent_ppo.model.load_state_dict(torch.load(PPO_MODEL_PATH))
+from learning.strategy.ppo.ppo_agent import PPOAgent
+from learning.strategy.ppo.ppo_network import ActorCritic
+from learning.strategy.random_strategy import RandomStrategy
+from learning.strategy.buy_and_hold_strategy import BuyAndHoldStrategy
 
 
-def evaluate_agent(env, agent, is_ppo=False):
-    obs, _ = env.reset()
+def compute_metrics(rewards):
+    cumulative_returns = np.cumsum(rewards)
+    sharpe_ratio = np.mean(rewards) / (np.std(rewards) + 1e-8)
+    max_drawdown = np.max(np.maximum.accumulate(cumulative_returns) - cumulative_returns)
+    return {
+        "Total Reward": round(cumulative_returns[-1], 2),
+        "Sharpe Ratio": round(sharpe_ratio, 3),
+        "Max Drawdown": round(max_drawdown, 2)
+    }
+
+
+def evaluate_agent(agent, env):
+    state = env.reset()
+    rewards = []
     done = False
-    total_reward = 0
-    values = []
-
     while not done:
-        if is_ppo:
-            action, _, _ = agent.select_action(obs)
+        if isinstance(agent, PPOAgent):
+            action, _ = agent.select_action(state)
         else:
-            action = agent.select_action(obs, epsilon=0.0)
-        obs, reward, terminated, truncated, info = env.step(action)
-        done = terminated or truncated
-        total_reward += reward
-        values.append(info["portfolio_value"])
-
-    return total_reward, values
+            action = agent.select_action(state)
+        state, reward, done, _ = env.step(action)
+        rewards.append(reward)
+    return compute_metrics(rewards)
 
 
-def evaluate_baseline(env, strategy_name="buy_and_hold"):
-    obs, _ = env.reset()
-    total_reward = 0
-    values = []
+if __name__ == "__main__":
+    env = TradingEnv(data_source="mid_dimension", window_size=30)
 
-    if strategy_name == "buy_and_hold":
-        action_plan = [1] + [0] * (len(env.df) - env.window_size - 2) + [2]
-    elif strategy_name == "random":
-        np.random.seed(42)
-        action_plan = np.random.choice([0, 1, 2], size=len(env.df) - env.window_size)
-    else:
-        raise ValueError("Unknown strategy name.")
+    # Use true dimension used in training (hardcoded here as 990)
+    trained_obs_dim = 990
+    action_dim = env.action_space.shape[0]
 
-    for action in action_plan:
-        obs, reward, terminated, truncated, info = env.step(action)
-        total_reward += reward
-        values.append(info["portfolio_value"])
-        if terminated or truncated:
-            break
+    # Random Strategy
+    print("\n📊 Random Strategy:")
+    random_agent = RandomStrategy(action_dim)
+    random_metrics = evaluate_agent(random_agent, env)
+    print(random_metrics)
 
-    return total_reward, values
+    # Buy and Hold
+    print("\n📊 Buy and Hold Strategy:")
+    buy_and_hold = BuyAndHoldStrategy(env)
+    buy_and_hold_metrics = evaluate_agent(buy_and_hold, env)
+    print(buy_and_hold_metrics)
 
+    # PPO Strategy
+    print("\n📊 PPO Strategy:")
+    actor_critic = ActorCritic(state_dim=trained_obs_dim, action_dim=action_dim)
+    actor_critic.load_state_dict(torch.load("models/ppo_actor_critic.pt", map_location="cpu"))
+    ppo_agent = PPOAgent(actor_critic=actor_critic, device="cpu")
+    ppo_metrics = evaluate_agent(ppo_agent, env)
+    print(ppo_metrics)
 
-def compute_metrics(values):
-    values = np.array(values)
-    returns = np.diff(values) / values[:-1]
-    cumulative_return = (values[-1] - values[0]) / values[0] * 100
-    sharpe_ratio = np.mean(returns) / (np.std(returns) + 1e-8)
-    drawdown = 1 - values / np.maximum.accumulate(values)
-    max_drawdown = np.max(drawdown) * 100
-    volatility = np.std(returns) * 100
-    return cumulative_return, sharpe_ratio, max_drawdown, volatility
+    # Comparison
+    strategies = ["Random", "Buy&Hold", "PPO"]
+    rewards = [random_metrics["Total Reward"], buy_and_hold_metrics["Total Reward"], ppo_metrics["Total Reward"]]
 
-
-def print_results(name, reward, values):
-    cr, sr, dd, vol = compute_metrics(values)
-    print(f"\n📊 {name} Strategy:")
-    print(f" - Total Reward       = {reward:.2f}")
-    print(f" - Cumulative Return  = {cr:.2f}%")
-    print(f" - Sharpe Ratio       = {sr:.2f}")
-    print(f" - Max Drawdown       = {dd:.2f}%")
-    print(f" - Volatility         = {vol:.2f}%")
-
-
-# === Evaluate All ===
-print_results("DQN", *evaluate_agent(TradingEnv(df, 10), agent_dqn, is_ppo=False))
-print_results("PPO", *evaluate_agent(TradingEnv(df, 10), agent_ppo, is_ppo=True))
-print_results("Buy-and-Hold", *evaluate_baseline(TradingEnv(df, 10), "buy_and_hold"))
-print_results("Random", *evaluate_baseline(TradingEnv(df, 10), "random"))
-
-
+    plt.bar(strategies, rewards)
+    plt.title("Total Reward Comparison")
+    plt.ylabel("Total Reward")
+    plt.savefig("evaluation/portfolio_comparison_full.png")
+    plt.show()
