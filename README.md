@@ -1,88 +1,129 @@
-# RL_trading_system
+# 📈 RL Trading System
 
-This project implements a modular reinforcement learning (RL) trading system with multiple strategies including PPO, DQN, and Random policies. It features a custom trading environment and supports evaluation on both simulated (Copula-based) and real financial data.
+A modular reinforcement learning (RL) system for financial trading, integrating:
+- 🧠 PPO / DQN strategies
+- 📊 t-Copula-based synthetic data simulation
+- 🧮 Risk-aware exploration via latent density bonus
+- ⚙️ Modular Python + PyBind11 C++ backend
 
 ---
 
-## 📁 Project Structure
+## 🔧 Project Structure
 
 ```
 RL_trading_system/
-│
-├── 0_scripts/              # Training, testing, and data download scripts
-│
-├── 1_cpp_implementation/   # (Optional) High-performance C++ modules (if used)
-│
-├── 2_theory/               # LaTeX documents: financial math, RL theory, copula modeling
-│
-├── 3_data/
-│   ├── low_dimension/      # Simulated or real market data
-│   └── processed/          # Cleaned CSVs
-│
-├── 4_learning/
-│   ├── env/                # Custom TradingEnv implementation
-│   └── strategy/
-│       ├── rl/
-│       │   ├── dqn/        # DQN agent and model
-│       │   ├── ppo/        # PPO agent and model
-│       │   └── random/     # Random policy baseline
-│       └── shared/         # Common reward functions, utilities, etc.
-│
-├── 5_evaluation/           # Scripts for evaluating and comparing strategies
-│
-├── Dockerfile              # Environment setup (optional)
-├── requirements.txt        # Python dependencies
-└── README.md               # Project introduction (this file)
+├── Dockerfile                       # Docker container setup (optional)
+├── README.md                        # Project overview (README)
+├── cpp_implementation               # C++ modules (for high performance)
+├── data                              # Raw & simulated data (asset returns, simulations)
+├── evaluation                        # Strategy evaluation scripts
+├── exploration                       # Latent bonus exploration module
+├── learning                          # RL agents, envs, reward functions
+├── models                            # Saved model checkpoints (.pt files)
+├── requirements.txt                  # Python dependencies
+├── scripts                           # Training and testing entry points
+├── theory                            # RL theory and copula modeling
+└── venv                              # Virtual environment
 ```
 
 ---
 
-## 🧠 Key Features
+## 🚀 Quick Start
 
-- **Custom Trading Environment:** With position tracking, account balance, and action history
-- **Multiple Strategies:** PPO, DQN, and a Random policy baseline
-- **Copula-Simulated Market Data:** For structured risk modeling
-- **Evaluation Metrics:** Total reward, Sharpe ratio, maximum drawdown
-- **Modular Design:** Clean separation of strategy, environment, and evaluation
+### 1. Clone & Setup
 
----
-
-## 🚀 Getting Started
-
-### 1. Clone this repository
 ```bash
-git clone https://github.com/kevinlmf/RL_trading_system.git
+git clone git@github.com:kevinlmf/RL_trading_system.git
 cd RL_trading_system
-```
 
-### 2. Set up the environment
-```bash
-python3 -m venv venv
+# Create and activate virtual environment
+python -m venv venv
 source venv/bin/activate
+
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-### 3. Run training (e.g., PPO)
-```bash
-python 0_scripts/train_ppo.py
-```
+### 2. Prepare Data
 
-### 4. Evaluate strategies
 ```bash
-python 5_evaluation/evaluate_strategies.py
+# Download real asset returns
+python 3_data/mid_dimension/download_real_data.py
+
+# Simulate synthetic data via t-Copula
+python 3_data/mid_dimension/simulate_copula_data.py
 ```
 
 ---
 
-## 🧩 Notes
+## 🧠 Training
 
-- PPO uses Generalized Advantage Estimation (GAE)
-- DQN uses epsilon-greedy exploration with replay buffer
-- Trading environment supports discrete Buy / Hold / Sell actions
-- Evaluation averages over multiple episodes
+### Train PPO Agent
+
+```bash
+python scripts/train_ppo.py
+```
+
+### Train DQN Agent
+
+```bash
+python scripts/train_dqn.py
+```
 
 ---
 
-## 📬 Contact
+## 📈 Evaluation
 
-Feel free to reach out via [GitHub Issues](https://github.com/kevinlmf/RL_trading_system/issues) or [LinkedIn](https://www.linkedin.com/in/yourprofile/).
+```bash
+python evaluation/evaluate_strategies.py
+```
+
+This will output:
+- 💹 Portfolio performance plot
+- 🧮 Sharpe ratio, max drawdown, total return
+- 🔁 Comparison across PPO / DQN / Buy-and-Hold / Random
+
+---
+
+## 🧪 Exploration Bonus
+
+This system includes an exploration bonus, using PCA and Kernel Density Estimation (KDE) to reward exploration in the latent space.
+
+---
+
+## 🧪 Requirements
+
+```txt
+# RL & Env
+stable-baselines3==2.2.1
+gymnasium==0.29.1
+gym==0.26.2              # Legacy Gym API compatibility
+
+# Scientific stack
+numpy>=1.23
+pandas>=1.5
+matplotlib>=3.6
+scipy>=1.8               # t-distribution, Cholesky decomposition
+seaborn>=0.12            # Correlation heatmaps and advanced plots
+
+# C++ module (optional)
+pybind11>=2.11
+
+# Logging
+tensorboard>=2.10
+
+# Optional
+scikit-learn>=1.2
+joblib>=1.2              # Used in scikit-learn and stable-baselines3
+```
+
+---
+
+
+
+## 📌 Future Extensions
+
+- [ ] Copula-informed reward shaping
+- [ ] MBIE-EB style optimistic exploration
+- [ ] Offline RL & Behavior Cloning
+- [ ] Deep hedging module with stochastic pricing
