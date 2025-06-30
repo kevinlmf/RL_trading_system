@@ -8,7 +8,7 @@ EPISODES = 50
 WINDOW_SIZE = 30
 INITIAL_CASH = 1e6
 BATCH_SIZE = 64
-DEVICE = "cpu"  # 如果使用 GPU 可以改为 "cuda"
+DEVICE = "cpu"  
 
 # === Initialize Environment ===
 env = TradingEnv(data_source="simulated", window_size=WINDOW_SIZE, initial_cash=INITIAL_CASH)

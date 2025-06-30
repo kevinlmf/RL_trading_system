@@ -1,20 +1,27 @@
-# RL & Env
+# === RL & Environment ===
 stable-baselines3==2.2.1
 gymnasium==0.29.1
+gym==0.26.2
 
-# Scientific stack
+# === Scientific Stack ===
 numpy>=1.23
 pandas>=1.5
 matplotlib>=3.6
+scipy>=1.10
+seaborn>=0.12
 
-# C++ module
+# === C++ Integration ===
 pybind11>=2.11
 
-# Logging
+# === Logging & Visualization ===
 tensorboard>=2.10
 
-# Optional
+# === Exploration Bonus ===
 scikit-learn>=1.2
+
+# === Data Source (Optional, if you use real data)
+yfinance>=0.2
+
 
 
 
