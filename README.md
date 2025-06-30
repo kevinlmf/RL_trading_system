@@ -6,26 +6,28 @@ A reinforcement learning-based trading system integrating Random, Buy-and-Hold, 
 
 ## 📂 Project Structure
 
+```
 RL_trading_system/
-├── theory/ # Theoretical background (e.g. RL, Finance, Copula)
-├── data/ # Raw and processed data (real & simulated)
-├── learning/
-│ ├── env/ # TradingEnv: gym-compatible market simulator
-│ ├── strategy/
-│ │ ├── random_strategy.py
-│ │ ├── buy_and_hold_strategy.py
-│ │ ├── dqn/
-│ │ │ ├── dqn_agent.py
-│ │ │ └── dqn_network.py
-│ │ └── ppo/
-│ │ ├── ppo_agent.py
-│ │ └── ppo_network.py
-├── evaluation/
-│ └── evaluate_strategies.py
-├── models/ # Trained models (e.g., ppo_actor_critic.pt, dqn_model.pt)
-├── scripts/ # Training scripts (e.g., train_dqn.py, train_ppo.py)
+├── theory/              # Theoretical background (e.g., RL, Finance, Copula)
+├── data/                # Raw and processed data (real & simulated)
+├── learning/            
+│   ├── env/               # TradingEnv: gym-compatible market simulator
+│   ├── strategy/         
+│   │   ├── random_strategy.py
+│   │   ├── buy_and_hold_strategy.py
+│   │   ├── dqn/
+│   │   │   ├── dqn_agent.py
+│   │   │   └── dqn_network.py
+│   │   └── ppo/
+│   │       ├── ppo_agent.py
+│   │       └── ppo_network.py
+├── evaluation/          
+│   └── evaluate_strategies.py
+├── models/                # Trained models (e.g., ppo_actor_critic.pt, dqn_model.pt)
+├── scripts/               # Training scripts (e.g., train_dqn.py, train_ppo.py)
 ├── README.md
 └── requirements.txt
+```
 
 ---
 
@@ -54,19 +56,23 @@ RL_trading_system/
 ```bash
 python scripts/train_ppo.py
 Trains PPOAgent using TradingEnv, saves to models/ppo_actor_critic.pt.
+```
 
-🟩 DQN
+### 🟩 DQN
+
 ```bash
 python scripts/train_dqn.py
 Trains DQNAgent using experience replay and target network. Saves model to models/dqn_model.pt.
+```
 
-📊 Evaluation
+### 📊 Evaluation
+
 ```bash
 python evaluation/evaluate_strategies.py
 Outputs performance metrics for all strategies and saves a plot at:
-
-```bash
 evaluation/portfolio_comparison_full.png
+```
+
 Example Output:
 
 ```yaml
@@ -81,30 +87,39 @@ Example Output:
 
 📊 DQN Strategy:
 {'Total Reward': 280XXXX.XX, 'Sharpe Ratio': 0.XXX, 'Max Drawdown': XXXXXXXX.XX}
-📌 Dependencies
-Install from requirements.txt:
+```
+
+---
+
+## 📌 Dependencies
+
+Install from `requirements.txt`:
 
 ```bash
 pip install -r requirements.txt
 Python 3.10+ recommended.
+```
 
-🔐 Model Checkpoints
-All trained models are saved in the models/ folder:
+---
 
-ppo_actor_critic.pt
+## 🔐 Model Checkpoints
 
-dqn_model.pt
+All trained models are saved in the `models/` folder:
 
-If missing, retrain using train_ppo.py or train_dqn.py.
+- `ppo_actor_critic.pt`
+- `dqn_model.pt`
 
-💡 TODO
- Add Copula-based reward shaping
+If missing, retrain using `train_ppo.py` or `train_dqn.py`.
 
- Add MBIE exploration bonus
+---
 
- Improve portfolio risk metrics (e.g., Sortino Ratio, Calmar Ratio)
+## 💡 TODO
 
- Backtest on real Yahoo Finance log returns
+- Add Copula-based reward shaping
+- Add MBIE exploration bonus
+- Improve portfolio risk metrics (e.g., Sortino Ratio, Calmar Ratio)
+- Backtest on real Yahoo Finance log returns
+- Add Stable-Baselines3 compatibility
 
- Add Stable-Baselines3 compatibility
+---
 
