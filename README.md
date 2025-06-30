@@ -4,13 +4,46 @@ A reinforcement learning-based trading system integrating Random, Buy-and-Hold, 
 
 ---
 
+## 🚀 Quick Start
+
+To quickly get started with the project, clone the repository to your local machine:
+
+```bash
+git clone https://github.com/your-username/RL_trading_system.git
+cd RL_trading_system
+```
+
+### Dependencies
+
+Before you start, make sure you have the required dependencies installed. You can install them using:
+
+```bash
+pip install -r requirements.txt
+```
+
+### Run the Training Scripts
+
+To train the DQN model:
+
+```bash
+python scripts/train_dqn.py
+```
+
+To train the PPO model:
+
+```bash
+python scripts/train_ppo.py
+```
+
+---
+
 ## 📂 Project Structure
 
 ```
 RL_trading_system/
-├── theory/              # Theoretical background (e.g., RL, Finance, Copula)
-├── data/                # Raw and processed data (real & simulated)
-├── learning/            
+├── 2_theory/              # Theoretical background (e.g., RL, Finance, Copula)
+├── 3_data/                # Raw and processed data (real & simulated)
+├── 4_learning/            
 │   ├── env/               # TradingEnv: gym-compatible market simulator
 │   ├── strategy/         
 │   │   ├── random_strategy.py
@@ -21,7 +54,7 @@ RL_trading_system/
 │   │   └── ppo/
 │   │       ├── ppo_agent.py
 │   │       └── ppo_network.py
-├── evaluation/          
+├── 5_evaluation/          
 │   └── evaluate_strategies.py
 ├── models/                # Trained models (e.g., ppo_actor_critic.pt, dqn_model.pt)
 ├── scripts/               # Training scripts (e.g., train_dqn.py, train_ppo.py)
@@ -120,6 +153,4 @@ If missing, retrain using `train_ppo.py` or `train_dqn.py`.
 - Improve portfolio risk metrics (e.g., Sortino Ratio, Calmar Ratio)
 - Backtest on real Yahoo Finance log returns
 - Add Stable-Baselines3 compatibility
-
----
 
