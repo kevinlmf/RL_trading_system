@@ -7,9 +7,9 @@ A reinforcement learning-based trading system integrating Random, Buy-and-Hold, 
 ## 📂 Project Structure
 
 RL_trading_system/
-├── 2_theory/ # Theoretical background (e.g. RL, Finance, Copula)
-├── 3_data/ # Raw and processed data (real & simulated)
-├── 4_learning/
+├── theory/ # Theoretical background (e.g. RL, Finance, Copula)
+├── data/ # Raw and processed data (real & simulated)
+├── learning/
 │ ├── env/ # TradingEnv: gym-compatible market simulator
 │ ├── strategy/
 │ │ ├── random_strategy.py
@@ -20,7 +20,7 @@ RL_trading_system/
 │ │ └── ppo/
 │ │ ├── ppo_agent.py
 │ │ └── ppo_network.py
-├── 5_evaluation/
+├── evaluation/
 │ └── evaluate_strategies.py
 ├── models/ # Trained models (e.g., ppo_actor_critic.pt, dqn_model.pt)
 ├── scripts/ # Training scripts (e.g., train_dqn.py, train_ppo.py)
