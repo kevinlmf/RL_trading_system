@@ -1,0 +1,5 @@
+*.py linguist-detectable=true
+*.cpp linguist-detectable=true
+*.h linguist-detectable=true
+Makefile linguist-detectable=false
+
