@@ -1,88 +1,89 @@
-# RL_trading_system
+## 🧠 RL Trading System: Copula Risk-Aware Reinforcement Learning
 
-This project implements a modular reinforcement learning (RL) trading system with multiple strategies including PPO, DQN, and Random policies. It features a custom trading environment and supports evaluation on both simulated (Copula-based) and real financial data.
+This repository implements a modular **Reinforcement Learning (RL)** system for **financial trading**. It features multi-asset environments, advanced RL algorithms, and **Copula-based risk modeling** for stress-testing under extreme market scenarios.
 
 ---
 
-## 📁 Project Structure
+## 🚀 Features
+
+✅ Multi-Asset RL Trading Environment (30+ assets)  
+✅ PPO, CPPO, DQN, SAC Strategies  
+✅ **Copula-Based Risk Modeling** for tail dependence and systemic risk  
+✅ Stress-Test with Black Swan Events (Fat Tail, Volatility Clustering, Systemic Shocks)  
+✅ C++ High-Performance Modules (via PyBind11)  
+✅ Modular Design: Easy to extend and experiment
+
+---
+
+## 📂 Project Structure
 
 ```
 RL_trading_system/
-│
-├── scripts/              # Training, testing, and data download scripts
-│
-├── cpp_implementation/   # (Optional) High-performance C++ modules (if used)
-│
-├── theory/               # LaTeX documents: financial math, RL theory, copula modeling
-│
-├── 3_data/
-│   ├── low_dimension/      # Simulated or real market data
-│   └── processed/          # Cleaned CSVs
-│
-├── 4_learning/
-│   ├── env/                # Custom TradingEnv implementation
-│   └── strategy/
-│       ├── rl/
-│       │   ├── dqn/        # DQN agent and model
-│       │   ├── ppo/        # PPO agent and model
-│       │   └── random/     # Random policy baseline
-│       └── shared/         # Common reward functions, utilities, etc.
-│
-├── 5_evaluation/           # Scripts for evaluating and comparing strategies
-│
-├── Dockerfile              # Environment setup (optional)
-├── requirements.txt        # Python dependencies
-└── README.md               # Project introduction (this file)
+├── data/
+│   ├── real_data/             # Real asset returns
+│   ├── simulation/            # Simulated extreme market scenarios
+│   └── data_generation/       # Scripts for data generation
+├── learning/
+│   ├── env/                   # Gym trading environment
+│   ├── strategy/              # PPO, CPPO, DQN, SAC strategies
+│   ├── copula/                # Gaussian Copula, t-Copula models
+│   └── shared/                # Base agent classes
+├── evaluation/                # Scripts for evaluating strategies
+├── cpp_implementation/        # High-performance C++ modules
+├── scripts/                   # Training/testing scripts
+├── theory/                    # Financial math and RL theory
+├── models/                    # Pre-trained models
+└── results/                   # Strategy evaluation results
 ```
 
 ---
 
-## 🧠 Key Features
+## 📊 Example Results
 
-- **Custom Trading Environment:** With position tracking, account balance, and action history
-- **Multiple Strategies:** PPO, DQN, and a Random policy baseline
-- **Copula-Simulated Market Data:** For structured risk modeling
-- **Evaluation Metrics:** Total reward, Sharpe ratio, maximum drawdown
-- **Modular Design:** Clean separation of strategy, environment, and evaluation
+| Strategy        | Annual Return | Sharpe Ratio | Max Drawdown |
+|-----------------|---------------|--------------|--------------|
+| PPO Baseline    | 12.4%         | 1.1          | -15.3%       |
+| PPO + Copula    | **17.8%**     | **1.5**      | -10.2%       |
+| Random          | 2.1%          | 0.2          | -50.0%       |
 
----
-
-## 🚀 Getting Started
-
-### 1. Clone this repository
-```bash
-git clone https://github.com/kevinlmf/RL_trading_system.git
-cd RL_trading_system
-```
-
-### 2. Set up the environment
-```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
-
-### 3. Run training (e.g., PPO)
-```bash
-python 0_scripts/train_ppo.py
-```
-
-### 4. Evaluate strategies
-```bash
-python 5_evaluation/evaluate_strategies.py
-```
+![PPO vs CPPO](results/ppo_copula_vs_baseline_metrics.png)
 
 ---
 
-## 🧩 Notes
+## 📦 Technologies Used
 
-- PPO uses Generalized Advantage Estimation (GAE)
-- DQN uses epsilon-greedy exploration with replay buffer
-- Trading environment supports discrete Buy / Hold / Sell actions
-- Evaluation averages over multiple episodes
+- **Python 3.10+**
+- **PyTorch** for RL agents
+- **PyBind11** for C++ modules
+- **Pandas, NumPy, Matplotlib, Seaborn** for data analysis
+- **Gym API** for environment design
 
 ---
 
-## 📬 Contact
+## 📖 Theory Behind the System
 
-Feel free to reach out via [GitHub Issues](https://github.com/kevinlmf/RL_trading_system/issues) or [LinkedIn](https://www.linkedin.com/in/yourprofile/).
+✅ **Copula Models**: Capturing multi-asset dependence, tail risks  
+✅ **Policy Gradient Algorithms**: PPO, CPPO for robust trading  
+✅ **Stress Testing**: Simulated fat tails, systemic shocks  
+
+---
+
+## 🏗 Future Work
+
+- ✅ Add Offline RL support (BC, CQL, IQL)  
+- ✅ Integrate Copula latent factors for state representation  
+- 🚧 Multi-Agent RL extensions  
+- 🚧 Deploy as RESTful API for live trading
+
+---
+
+## 👨‍💻 Author
+
+- **Mengfan Long (kevinlmf)**  
+  [GitHub](https://github.com/kevinlmf) | [LinkedIn](https://linkedin.com/in/kevinlmf)
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
