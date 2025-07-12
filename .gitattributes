@@ -1,5 +1,7 @@
-*.py linguist-detectable=true
-*.cpp linguist-detectable=true
-*.h linguist-detectable=true
-Makefile linguist-detectable=false
+# Tell GitHub linguist to ignore these files for language stats
+Makefile linguist-vendored
+*.cmake linguist-vendored
+*.sh linguist-vendored
+cpp_implementation/* linguist-vendored
+
 
