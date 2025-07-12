@@ -9,11 +9,11 @@ This project implements a modular reinforcement learning (RL) trading system wit
 ```
 RL_trading_system/
 │
-├── 0_scripts/              # Training, testing, and data download scripts
+├── scripts/              # Training, testing, and data download scripts
 │
-├── 1_cpp_implementation/   # (Optional) High-performance C++ modules (if used)
+├── cpp_implementation/   # (Optional) High-performance C++ modules (if used)
 │
-├── 2_theory/               # LaTeX documents: financial math, RL theory, copula modeling
+├── theory/               # LaTeX documents: financial math, RL theory, copula modeling
 │
 ├── 3_data/
 │   ├── low_dimension/      # Simulated or real market data
